@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="V17-product-api" />
+        <module name="V17-entity" />
+        <module name="v17-product-service" />
+        <module name="V17-rabbitmq-java" />
+        <module name="V17-Netty" />
+        <module name="V17-sms-api" />
+        <module name="v17-item" />
+        <module name="v17-miaosha" />
+        <module name="V17-service" />
+        <module name="v17-search-service" />
+        <module name="v17-search" />
+        <module name="v17-sso" />
+        <module name="v17-springboot-redis" />
+        <module name="v17-springboot-email" />
+        <module name="V17-mapper" />
+        <module name="V17-aliyun-sms" />
+        <module name="v17-register" />
+        <module name="v17-email" />
+        <module name="V17-cart-api" />
+        <module name="V17-common" />
+        <module name="V17-search-api" />
+        <module name="v17-order" />
+        <module name="v17-sms-service" />
+        <module name="v17-center" />
+        <module name="v17-cart" />
+        <module name="v17-msg" />
+        <module name="v17-cart-service" />
+        <module name="v17-index" />
+        <module name="V17-user-api" />
+        <module name="v17-user-service" />
+        <module name="v17-limit" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="V17-radis" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="v17-cart" options="-parameters" />
+      <module name="v17-cart-service" options="-parameters" />
+      <module name="v17-center" options="-parameters" />
+      <module name="v17-index" options="-parameters" />
+      <module name="v17-item" options="-parameters" />
+      <module name="v17-limit" options="-parameters" />
+      <module name="v17-miaosha" options="-parameters" />
+      <module name="v17-msg" options="-parameters" />
+      <module name="v17-order" options="-parameters" />
+      <module name="v17-product-service" options="-parameters" />
+      <module name="v17-register" options="-parameters" />
+      <module name="v17-search" options="-parameters" />
+      <module name="v17-search-service" options="-parameters" />
+      <module name="v17-sms-service" options="-parameters" />
+      <module name="v17-springboot-email" options="-parameters" />
+      <module name="v17-springboot-redis" options="-parameters" />
+      <module name="v17-sso" options="-parameters" />
+      <module name="v17-user-service" options="-parameters" />
+    </option>
+  </component>
+</project>

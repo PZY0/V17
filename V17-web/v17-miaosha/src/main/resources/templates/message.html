@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h3>发送消息</h3>
+    <input type="text" id="msg"/>
+    <input type="button" value="发送消息" id="sendMsg"/>
+    <h3>接收消息</h3>
+    <div id="reviceMsg" style="height: 500px;width: 500px;border: aqua;">
+    </div>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="application/javascript">
+        $(function(){
+            var socket;
+            if(window.WebSocket){
+                alert("连接");
+                socket = new WebSocket("ws://localhost:8888/ws");
+                socket.onopen = function(){
+                    console.log("和服务器已经创建连接");
+                };
+                socket.onmessage = function(e){
+                    //获取服务器推送的消息
+                    console.log(e);
+                    var info = e.data;
+                    var html = $("#reviceMsg").html();
+                    $("#reviceMsg").html(html+"<br/>"+info);
+                };
+            }else{
+                alert("浏览器版本过低");
+            }
+            //绑定事件
+            $("#sendMsg").click(function(){
+                var msg = $("#msg").val();
+                socket.send(msg);
+            });
+        })
+    </script>
+</body>
+</html>

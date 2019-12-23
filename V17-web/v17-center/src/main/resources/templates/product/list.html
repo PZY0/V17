@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base href="/">
+    <meta charset="UTF-8">
+    <title>展示</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"/>
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/uploadifive.css">
+</head>
+<body>
+    <!--展示-->
+    <div class="col-md-12">
+        <div class="container-fluid">
+        <!-- Stack the columns on mobile by making one full-width and the other half-width -->
+            <div class="row">
+                <!--<div class="col-xs-12 col-md-8">.col-xs-12 .col-md-8</div>
+                <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>-->
+                <div class="col-md-4 col-md-offset-8">
+                    <!--<button type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal">添加</button>-->
+                    <button type="button" class="btn btn-success" id="to-add">添加</button>
+                    <button type="button" class="btn btn-danger" id="dels">删除</button>
+                </div>
+            </div>
+
+            <!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
+            <div class="row">
+                <!--<div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+                <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+                <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>-->
+                <div class="col-md-12">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td><input type="checkbox" id="selall">全选</td>
+                            <td>商品编号</td>
+                            <td>商品名称</td>
+                            <td>商品类型</td>
+                            <td>商品价格</td>
+                            <td>促销价</td>
+                            <td>商品图片</td>
+                            <td>商品卖点</td>
+                            <td>商品操作</td>
+                        </tr>
+                        <tr th:each="product : ${page.list}">
+                            <td><input type="checkbox" th:value="${product.id}" th:class="single"></td>
+                            <td th:text="${product.id}">222</td>
+                            <td th:text="${product.name}">222</td>
+                            <td th:text="${product.typeName}">222</td>
+                            <td th:text="${product.price}"></td>
+                            <td th:text="${product.salePrice}">222</td>
+                            <td><img th:src="${product.images}" height="100px" width="100px"></td>
+                            <td th:text="${product.salePoint}">222</td>
+                            <td>
+                                <button type="button" th:id="${product.id}" class="btn btn-primary btn-xs update">修改</button>
+                                <button type="button" class="btn btn-primary btn-default btn-xs btn-danger del" th:id="${product.id}">删除</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Columns are always 50% wide, on mobile and desktop -->
+            <div class="row">
+                <div class="col-md-6">当前第<span th:text="${page.pageNum}"></span>页，
+                    共有<span th:text="${page.total}"></span>条记录，
+                    共有<span th:text="${page.pages}"></span>页</div>
+                <div class="col-md-6">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li>
+                                <a href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li th:each="pageNum : ${page.navigatepageNums}" th:class="${page.pageNum==pageNum?'active':''}">
+                                <a href="#" th:text="${pageNum}" th:href="|product/page/${pageNum}/${page.pageSize}|">1</a>
+                            </li>
+                            <li>
+                                <a href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--添加层-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="addModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="addform" action="product/add" method="post">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">商品名称</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="name" placeholder="商品名称" name="product.name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="price" class="col-sm-2 control-label">价格</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="price" placeholder="价格" name="product.price">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="salePrice" class="col-sm-2 control-label">促销价</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="salePrice" placeholder="促销价" name="product.salePrice">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="images" class="col-sm-2 control-label">图片</label>
+                            <div class="col-sm-10">
+                                <img src="#" id="pict" style="width: 100px;height: 100px;display: none">
+                                <input id="file_upload" type="file" name="file" />
+                                <input type="hidden" class="form-control" id="images" placeholder="图片" name="product.images">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="salePoint" class="col-sm-2 control-label">卖点</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="salePoint" placeholder="卖点" name="product.salePoint">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="type_id" class="col-sm-2 control-label">商品类别</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="type_id" value="1" name="product.typeId">
+                                <input type="text" class="form-control" id="type_name" value="电子数码" name="product.typeName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="productdesc" class="col-sm-2 control-label">商品描述</label>
+                            <div class="col-sm-10" id="productdesc">
+                                <!--<textarea class="form-control" rows="3" id="productdesc" name="productdesc"></textarea>-->
+                                <input type="hidden" id="prode" name="productdesc">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="add">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+    <!--修改层-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="updateModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">修改商品信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="updateform" action="product/update" method="post">
+                        <input type="hidden" name="product.id" id="pro-id">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">商品名称</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="name2" placeholder="商品名称" name="product.name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="price" class="col-sm-2 control-label">价格</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="price2" placeholder="价格" name="product.price">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="salePrice" class="col-sm-2 control-label">促销价</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="salePrice2" placeholder="促销价" name="product.salePrice">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="images" class="col-sm-2 control-label">图片</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="images2" placeholder="图片" name="product.images">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="salePoint" class="col-sm-2 control-label">卖点</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="salePoint2" placeholder="卖点" name="product.salePoint">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="type_id" class="col-sm-2 control-label">商品类别</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="type_id2" value="1" name="product.typeId">
+                                <input type="text" class="form-control" id="type_name2" value="电子数码" name="product.typeName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="productdesc" class="col-sm-2 control-label">商品描述</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="3" id="productdesc2" name="productdesc"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="update">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="js/jquery.uploadifive.js" type="text/javascript"></script>
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+
+        //初始化富文本框
+        var E = window.wangEditor
+        var editor = new E('#productdesc')
+        // 自定义菜单配置
+        editor.customConfig.menus = [
+            'head',  // 标题
+            'bold',  // 粗体
+            'fontSize',  // 字号
+            'fontName',  // 字体
+            'italic',  // 斜体
+            'foreColor',  // 文字颜色
+            'backColor',  // 背景颜色
+            'link',  // 插入链接
+            'justify',  // 对齐方式
+            'emoticon',  // 表情
+            'image',  // 插入图片
+            'undo',  // 撤销
+            'redo'  // 重复
+        ]
+        editor.customConfig.uploadFileName = 'files';
+        editor.customConfig.uploadImgServer = '/file/uploads';
+        editor.create()
+
+        $("#file_upload").uploadifive({
+            'buttonText'   : '上传',
+            'fileObjName'  : 'file',
+            'uploadScript' : 'file/upload',
+            'onUploadComplete' : function(file,data) {
+                var result = JSON.parse(data);
+                console.log(data)
+                $("#pict").attr("src",result.data);
+                $("#pict").show();
+                $("#images").val(result.data);
+            }
+        });
+
+        $("#to-add").click(function(){
+            $("#addModal").modal({
+                backdrop:"static",
+                keyboard:false
+            })
+        });
+        $("#add").click(function(){
+            //获取富文本框内容
+            var content = editor.txt.html();
+            $("#prode").val(content);
+            $("#addform").submit();
+        })
+
+        $("#selall").click(function(){
+            $(".single").prop("checked",$("#selall").prop("checked"));
+        })
+
+        $(".single").click(function(){
+            /*var count = 0;
+            $(".single").each(function () {
+                if($(this).prop("checked")){
+                    count++;
+                }
+            })
+            if(count==$(".single").length){
+                $("#selall").prop("checked",true);
+            }else {
+                $("#selall").prop("checked",false);
+            }*/
+            $("#selall").prop("checked",$(".single").length==$(".single:checked").length);
+        })
+
+        $("#dels").click(function () {
+            var checkedIds = $(".single:checked");
+            if(checkedIds.length==0){
+                alert("请选择商品");
+                return;
+            }
+            var ids = [];
+            for(var i=0;i<checkedIds.length;i++){
+                ids.push(checkedIds[i].value);
+            }
+            if(confirm("确定删除吗？删除之后，数据不可恢复！")){
+                $.ajax({
+                    url:"product/batchDel",
+                    type:"POST",
+                    data:"ids="+ids,
+                    success:function(data){
+                        if(data.statusCode==200){
+                            location.href="product/page/1/2";
+                        }else{
+                            alert(data.dada);
+                        }
+                    }
+                });
+            }
+        })
+
+        $(".del").click(function(){
+            if(confirm("确定删除吗？删除之后，数据不可恢复！")){
+                var id = $(this).attr("id");
+                $.ajax({
+                    url:"product/del",
+                    data:"id="+id,
+                    type:"POST",
+                    success:function (data) {
+                        if(data.statusCode==200){
+                            location.href="product/page/1/2";
+                        }else{
+                            alert(data.dada);
+                        }
+                    }
+                });
+            }
+        })
+
+        $(".update").click(function(){
+            var id = $(this).attr("id");
+            $.ajax({
+               url:"product/toUpdate",
+               data:"id="+id,
+               success:function(data){
+                   $("#updateModal").modal({
+                       backdrop:"static",
+                       keyboard:false
+                   })
+                   $("#pro-id").val(data.product.id);
+                   $("#name2").val(data.product.name);
+                   $("#price2").val(data.product.price);
+                   $("#salePrice2").val(data.product.salePrice);
+                   $("#images2").val(data.product.images);
+                   $("#salePoint2").val(data.product.salePoint);
+                   $("#type_id2").val(data.product.typeId);
+                   $("#type_name2").val(data.product.typeName);
+                   $("#productdesc2").val(data.productdesc);
+               }
+            });
+        })
+
+        $("#update").click(function () {
+            $("#updateform").submit();
+        })
+    })
+</script>
+</body>
+</html>
+
