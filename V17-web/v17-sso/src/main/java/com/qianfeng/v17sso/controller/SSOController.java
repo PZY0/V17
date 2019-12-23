@@ -25,10 +25,6 @@ import java.util.Map;
 @RequestMapping("sso")
 public class SSOController {
 
-    public static void main(String[] args){
-        System.out.println();
-    }
-
     @Reference
     private IUserService userService;
 
