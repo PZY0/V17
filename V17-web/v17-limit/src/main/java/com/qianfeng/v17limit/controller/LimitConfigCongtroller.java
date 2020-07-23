@@ -3,6 +3,7 @@ package com.qianfeng.v17limit.controller;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,11 +21,17 @@ public class LimitConfigCongtroller {
 
     @RequestMapping("config")
     @ResponseBody
-    public String config(Double sum){
-        rabbitTemplate.setConfirmCallback(confirmCallback);
+    public ResponseEntity<String> config(Double sum){
+//        rabbitTemplate.setConfirmCallback(confirmCallback);
+        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
+            if (ack) {
+                System.out.println("消息正确送达到MQ服务器");
+                System.out.println("correlationData: " + correlationData.getId());
+            }
+        });
         CorrelationData correlationData = new CorrelationData("666");
         rabbitTemplate.convertAndSend("order-exchange","limitNum",sum,correlationData);
-        return "success";
+        return ResponseEntity.ok("success");
     }
 
     //回调函数: confirm确认

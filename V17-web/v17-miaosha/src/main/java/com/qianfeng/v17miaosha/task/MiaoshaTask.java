@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -26,7 +27,11 @@ public class MiaoshaTask {
     @Resource(name = "MyRedisTemplate")
     private RedisTemplate<String,Object> redisTemplate;
 
+    @Resource(name = "MyLongRedisTemplate")
+    private RedisTemplate<String,Long> longRedisTemplate;
+
     @Scheduled(cron = "0/5 * * * * ?")
+    @Transactional
     public void task(){
         //查看当前可以开启秒杀活动的商品
         List<TMiaoshaProduct> list = miaoshaProductMapper.getStartMiaoshaProduct();
@@ -36,6 +41,7 @@ public class MiaoshaTask {
                 /*for (Integer i = 0; i < product.getCount(); i++) {
                     redisTemplate.opsForList().leftPush(sb.toString(),product.getProductId());
                 }*/
+                //流水线方式
                 redisTemplate.executePipelined(new SessionCallback<Object>() {
                     @Override
                     public Object execute(RedisOperations redisOperations) throws DataAccessException {
@@ -45,6 +51,12 @@ public class MiaoshaTask {
                         return null;
                     }
                 });
+//                  方式2
+//                Collection<Long> ids = new ArrayList<>(product.getCount());
+//                for (Integer i = 0; i < product.getCount(); i++) {
+//                    ids.add(product.getProductId());
+//                }
+//                longRedisTemplate.opsForList().leftPushAll(sb.toString(), ids);
                 product.setMiaoshaStatus("1");
                 miaoshaProductMapper.updateByPrimaryKeySelective(product);
                 String key = new StringBuilder("miaosha-productInfo-").append(product.getId()).toString();

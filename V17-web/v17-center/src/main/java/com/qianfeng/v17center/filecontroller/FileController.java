@@ -28,35 +28,37 @@ public class FileController {
     private String imageServer;
 
     @PostMapping("upload")
-    public ResultBean upload(MultipartFile file){
+    public ResultBean upload(MultipartFile file) {
         String filename = file.getOriginalFilename();
-        String extName = filename.substring(filename.lastIndexOf(".")+1);
+        String extName = filename.substring(filename.lastIndexOf(".") + 1);
         try {
-            StorePath storePath = client.uploadImageAndCrtThumbImage(file.getInputStream(), file.getSize(), extName, null);
+            StorePath storePath = client.uploadImageAndCrtThumbImage(
+                    file.getInputStream(), file.getSize(), extName, null);
             String fullPath = storePath.getFullPath();
             StringBuilder sb = new StringBuilder(imageServer).append(fullPath);
-            return new ResultBean(200,sb);
+            return new ResultBean(200, sb);
         } catch (IOException e) {
             e.printStackTrace();
-            return new ResultBean(500,"文件上传失败");
+            return new ResultBean(500, "文件上传失败");
         }
     }
 
     @PostMapping("uploads")
-    public EditorResultBean uploads(MultipartFile[] files){
+    public EditorResultBean uploads(MultipartFile[] files) {
         String[] data = new String[files.length];
         try {
-            for(int i=0;i<files.length;i++){
+            for (int i = 0; i < files.length; i++) {
                 String originalFilename = files[i].getOriginalFilename();
                 String substring = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
-                StorePath storePath = client.uploadImageAndCrtThumbImage(files[i].getInputStream(), files[i].getSize(), substring, null);
+                StorePath storePath = client.uploadImageAndCrtThumbImage(
+                        files[i].getInputStream(), files[i].getSize(), substring, null);
                 StringBuilder sb = new StringBuilder(imageServer).append(storePath.getFullPath());
                 data[i] = sb.toString();
             }
-            return new EditorResultBean("0",data);
+            return new EditorResultBean("0", data);
         } catch (IOException e) {
             e.printStackTrace();
-            return new EditorResultBean("1",null);
+            return new EditorResultBean("1", null);
         }
     }
 }

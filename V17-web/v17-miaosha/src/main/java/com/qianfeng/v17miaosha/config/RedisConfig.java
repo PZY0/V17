@@ -20,4 +20,12 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         return redisTemplate;
     }
+
+    @Bean(name = "MyLongRedisTemplate")
+    public RedisTemplate<String,Long> getLongRedisTemplate(RedisConnectionFactory factory){
+        RedisTemplate redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(factory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        return redisTemplate;
+    }
 }
